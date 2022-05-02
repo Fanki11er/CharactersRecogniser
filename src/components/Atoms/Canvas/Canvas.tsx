@@ -1,18 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { CanvasWrapper, Wrapper } from './Canvas.styles';
 import CanvasDraw from 'react-canvas-draw';
-import { Character, ComposedElement, NormalizedCharacter } from '../../../Interfaces/interfaces';
+import { Character, ComposedElement, NormalizedCharacter, Point } from '../../../Interfaces/interfaces';
 import { DefaultButton } from '../Buttons/Buttons';
 import Brain from '../../Organisms/Brain/Brain';
 import { database } from '../../../Firebase/firebase';
 import { child, get, push, ref, set } from 'firebase/database';
 import NumberSelectionMenu from '../../Molecules/NumberSelectMenu/NumberSelectMenu';
+import Visualization from '../../Molecules/Visualizer/Visualizer';
+import useNormalizedData from '../../../Hooks/useNormalizedData';
+import { CanvasContext } from '../../../Providers/NormalizedDataProvider';
+import MyCanvas from '../../Molecules/MyCanvas/MyCanvas';
 const Canvas = () => {
   const canvasRev = useRef<CanvasDraw>(null);
   //const [characters, setCharacter] = useState<Character[]>([]);
   const [canvas, setCanvas] = useState<CanvasDraw | null>(null);
   const [normalizedCharacter, setNormalizedCharacter] = useState<NormalizedCharacter>();
   const [selectValue, setSelectValue] = useState('0');
+  const {setCharacter} = useContext(CanvasContext);
+  const [newCharacter, setNewCharacter] = useState<NormalizedCharacter | undefined>(undefined)
   //const [composedElements, setComposedElements] = useState<ComposedElement[]>([]);
 
   /*const testDb = async () => {
@@ -77,12 +83,17 @@ const Canvas = () => {
   };
 
   const normalizeData = (composedElements: ComposedElement) => {
-    const array = Array(38);
-    array.fill(Array(45).fill(0));
+    const array = Array(45);
+    for(let i = 0; i< array.length; i++){
+      array[i] = Array(38).fill(0);
+    }
+
+    /*const array = Array(38);
+    array.fill(Array(45).fill(0));*/
 
     for (let i = 0; i < composedElements.content.length; i++) {
-      let x = Number.parseInt((composedElements.content[i].x / 4).toFixed(0));
-      let y = Number.parseInt((composedElements.content[i].y / 4).toFixed(0));
+      let y = Number.parseInt((composedElements.content[i].x / 4).toFixed(0));
+      let x = Number.parseInt((composedElements.content[i].y / 4).toFixed(0));
 
       array[x][y] = 1;
     }
@@ -90,19 +101,24 @@ const Canvas = () => {
       type: composedElements.type,
       content: array.flat(),
     });
+    setCharacter({
+      type: composedElements.type,
+      content: array.flat(),
+    });
+    
   };
 
   const getCharacter = () => {
     if (canvas) {
-      const character = getData(canvas, selectValue);
+      const character = getData(canvas, selectValue)
       const extractedCharacter = extractData(character);
       normalizeData(extractedCharacter);
+      console.log(normalizedCharacter?.content.length);
       resetCanvas(canvas);
+     
     }
   };
-  useEffect(() => {
-    console.log('CHAR ', normalizedCharacter);
-  }, [normalizedCharacter]);
+ 
 
   const selectType = (type: string) => {
     setSelectValue(type);
@@ -113,6 +129,25 @@ const Canvas = () => {
 
     push(child(dbReference, `/${character.type}`), character);
   };
+
+  const resetDB = ()=> {
+    const dbReference = ref(database, '/');
+    set(dbReference, 'Numbers')
+  }
+
+  /*const normalizeTest = ()=> {
+    const array = Array(45);
+    //array.fill(Array(10).fill(0));
+    for(let i = 0; i< array.length; i++){
+      array[i] = Array(38).fill(0);
+    }
+
+    array[2][2] = 1;
+    console.log(array);
+    console.log(array.length * array[0].length)
+  }
+
+  normalizeTest();*/
   /*if()
     const dbReference = ref(database, '/Numbers');
     set(dbReference, {
@@ -125,17 +160,41 @@ const Canvas = () => {
       .catch((err) => {
         console.log(err);
       });*/
+      const newNormalization = (point: Point[], characterType: string) =>{
+        const array = Array(16);
+        for(let i = 0; i< array.length; i++){
+          array[i] = Array(10).fill(0);
+        } 
 
+        for (let i = 0; i < point.length; i++) {
+          let x = point[i].x
+          let y = point[i].y
+    
+          array[x][y] = 1;
+        }
+
+        setNewCharacter({
+          type: characterType,
+          content: array.flat()
+        });
+        
+      }
+        const getNewData = (points: Point[])=> {
+          newNormalization(points, selectValue)
+         newCharacter &&  sendCharacter(newCharacter)
+         
+        }
+      
   return (
     <Wrapper>
       <CanvasWrapper>
         <CanvasDraw canvasHeight={180} canvasWidth={150} brushRadius={4} hideGrid={true} ref={canvasRev} />
       </CanvasWrapper>
-      <DefaultButton onClick={() => canvas && getCharacter()}>Get Data</DefaultButton>
-      <DefaultButton onClick={() => canvas && resetCanvas(canvas)}>Reset Canvas</DefaultButton>
       <DefaultButton onClick={() => sendCharacter(normalizedCharacter!)}>DB</DefaultButton>
+      <DefaultButton onClick={() => resetDB()}>RESETDB</DefaultButton>
       <NumberSelectionMenu select={selectType} />
       <Brain />
+      <Visualization pixels={ newCharacter? newCharacter.content : []}/>
     </Wrapper>
   );
 };
@@ -144,6 +203,7 @@ const Canvas = () => {
 /*
 
 */
+
 
 export default Canvas;
 
@@ -223,3 +283,7 @@ const getData = (canvas: CanvasDraw, characterType: string) => {
   };
 */
 
+/*
+  <DefaultButton onClick={() => canvas && getCharacter()}>Get Data</DefaultButton>
+      <DefaultButton onClick={() => canvas && resetCanvas(canvas)}>Reset Canvas</DefaultButton>
+*/
