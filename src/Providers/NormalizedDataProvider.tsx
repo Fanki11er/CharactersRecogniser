@@ -34,8 +34,8 @@ const NormalizedDataProvider = (props: PropsWithChildren<any>) => {
     const resultArray = Array(10).fill(0);
     for (let property in object) {
       resultArray[Number.parseInt(property)] = object[property];
-      console.log(resultArray, 'ARRAY');
     }
+    console.log(resultArray, 'ARRAY');
     return resultArray as number[];
   };
 

@@ -37,8 +37,8 @@ const Brain = () => {
   const [processedValue, setProcessedValue] = useState(0);
 
   const { rootEndpoint, getLearnEndpoint, modelsEndpoint, testEndpoint, getTrainedModelEndpoint } = firebaseEndPoints;
-  const net = new NeuralNetworkGPU({ hiddenLayers: [70, 70, 70] });
-  const iterations = 3000;
+  const net = new NeuralNetworkGPU({ hiddenLayers: [50, 50, 50] });
+  const iterations = 20000;
 
   useEffect(() => {
     countCharacters(trainingCharacters);

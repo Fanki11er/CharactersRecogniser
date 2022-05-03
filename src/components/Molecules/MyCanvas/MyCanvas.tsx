@@ -11,12 +11,13 @@ import { CanvasContext } from '../../../Providers/NormalizedDataProvider';
 import { ReactSketchCanvasRef, CanvasPath } from 'react-sketch-canvas';
 import { firebaseEndPoints } from '../../../Firebase/Endpoints';
 import { StatusInfoContext } from '../../../Providers/StatusInfoProvider';
+import SolutionSection from '../SolutionSection/SolutionSection';
 
 const MyCanvas = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [character, setCharacter] = useState<NormalizedCharacter | undefined>(undefined);
   const [selectValue, setSelectValue] = useState('0');
-  const { setCharacter: setTestCharacter, getSolution } = useContext(CanvasContext);
+  const { setCharacter: setTestCharacter } = useContext(CanvasContext);
   const { statusInfo, changeStatusInfo } = useContext(StatusInfoContext);
 
   const canvasStyles = {
@@ -101,9 +102,9 @@ const MyCanvas = () => {
       </CanvasSection>
 
       <Brain />
+      <SolutionSection />
       {statusInfo.status === 'INFO' && <StatusInfo>{statusInfo.message}</StatusInfo>}
       {statusInfo.status === 'ERROR' && <StatusErrorInfo>{statusInfo.message}</StatusErrorInfo>}
-      <DefaultButton onClick={() => getSolution()}>Get solution</DefaultButton>
     </MyCanvasWrapper>
   );
 };

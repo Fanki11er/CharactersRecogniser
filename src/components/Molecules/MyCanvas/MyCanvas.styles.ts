@@ -3,11 +3,11 @@ import { ReactSketchCanvas } from 'react-sketch-canvas';
 
 export const MyCanvasWrapper = styled.div`
   width: 100%;
-  max-width: 1vh;
+  max-width: 1vw;
   height: 100%;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 900px 1fr;
+  grid-template-columns: 400px 1fr;
   grid-template-rows: 400px 300px;
   margin: 25px;
 `;
