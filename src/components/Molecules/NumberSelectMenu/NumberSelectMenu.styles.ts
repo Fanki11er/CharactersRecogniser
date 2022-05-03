@@ -8,7 +8,7 @@ export const SelectNumberMenuWrapper = styled.div`
   align-items: center ;
   justify-content: center ;
   align-self: center ;
-justify-self: center ;
+justify-self: flex-start;
 `;
 
 export const Menu = styled.select`

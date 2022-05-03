@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
-import { Canvas, CanvasButtonsWrapper, CanvasSection, MyCanvasWrapper } from './MyCanvas.styles';
-import { NormalizedCharacter } from '../../../Interfaces/interfaces';
+import { Canvas, CanvasButtonsWrapper, CanvasSection, MyCanvasWrapper, StatusErrorInfo, StatusInfo } from './MyCanvas.styles';
+import { NormalizedCharacter, Status, StatusInfoInterface } from '../../../Interfaces/interfaces';
 import { DefaultButton } from '../../Atoms/Buttons/Buttons';
 import Visualization from '../Visualizer/Visualizer';
 import NumberSelectionMenu from '../NumberSelectMenu/NumberSelectMenu';
@@ -9,15 +9,38 @@ import { database } from '../../../Firebase/firebase';
 import Brain from '../../Organisms/Brain/Brain';
 import { CanvasContext } from '../../../Providers/NormalizedDataProvider';
 import { ReactSketchCanvasRef, CanvasPath } from 'react-sketch-canvas';
+import { firebaseEndPoints } from '../../../Firebase/Endpoints';
 
 const MyCanvas = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [character, setCharacter] = useState<NormalizedCharacter | undefined>(undefined);
   const [selectValue, setSelectValue] = useState('0');
   const { setCharacter: setTestCharacter } = useContext(CanvasContext);
+  const [statusInfo, setStatusInfo] = useState<StatusInfoInterface>({
+    status: '',
+    message: '',
+  });
+
   const canvasStyles = {
     border: '4px solid orange',
     borderRadius: '5px',
+  };
+
+  const { learnEndpoint, testEndpoint } = firebaseEndPoints;
+  const changeStatusInfo = (status: Status, message: string) => {
+    setStatusInfo({
+      status,
+      message,
+    });
+    setTimeout(() => {
+      resetStatusInfo();
+    }, 3000);
+  };
+  const resetStatusInfo = () => {
+    setStatusInfo({
+      status: '',
+      message: '',
+    });
   };
 
   const selectType = (type: string) => {
@@ -58,10 +81,20 @@ const MyCanvas = () => {
     setTestCharacter(newCharacter);
   };
 
-  const sendCharacter = async (character: NormalizedCharacter) => {
-    const dbReference = ref(database, '/Numbers');
+  const sendCharacter = async (character: NormalizedCharacter, endpoint: string) => {
+    if (character.content.length !== 160) {
+      changeStatusInfo('ERROR', `${character.content.length} - wrong size of character`);
+      return;
+    }
+    const dbReference = ref(database, endpoint);
 
-    push(child(dbReference, `/${character.type}`), character);
+    push(child(dbReference, `/${character.type}`), character)
+      .then(() => {
+        changeStatusInfo('INFO', 'Sent');
+      })
+      .catch((err) => {
+        changeStatusInfo('ERROR', err.message);
+      });
   };
 
   const clearCanvas = () => {
@@ -77,13 +110,16 @@ const MyCanvas = () => {
         <CanvasButtonsWrapper>
           <DefaultButton onClick={() => getNewData()}>Get data</DefaultButton>
           <DefaultButton onClick={() => clearCanvas()}>Reset</DefaultButton>
-          <DefaultButton onClick={() => character && sendCharacter(character)}>Send to DB</DefaultButton>
+          <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
+          <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
         </CanvasButtonsWrapper>
         <Visualization pixels={character ? character.content : []} />
         <NumberSelectionMenu select={selectType} />
       </CanvasSection>
 
       <Brain />
+      {statusInfo.status === 'INFO' && <StatusInfo>{statusInfo.message}</StatusInfo>}
+      {statusInfo.status === 'ERROR' && <StatusErrorInfo>{statusInfo.message}</StatusErrorInfo>}
     </MyCanvasWrapper>
   );
 };

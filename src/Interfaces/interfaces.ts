@@ -18,3 +18,10 @@ export interface NormalizedCharacter {
   content: number[];
 }
 
+export interface StatusInfoInterface {
+  message: string;
+  status: Status;
+}
+
+export type Status = 'INFO' | 'ERROR' | '';
+

@@ -25,6 +25,7 @@ export const CanvasSection = styled.section`
   justify-content: center;
   border: 2px solid black;
   border-radius: 15px;
+  position: relative;
 `;
 
 export const CanvasButtonsWrapper = styled.div`
@@ -36,7 +37,7 @@ export const CanvasButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-around; ;
 `;
 
 export const Canvas = styled(ReactSketchCanvas)`
@@ -48,5 +49,27 @@ export const Canvas = styled(ReactSketchCanvas)`
   grid-row: 1 / span 1;
   align-self: center;
   justify-self: center;
+`;
+
+export const StatusInfo = styled.div`
+  width: fit-content;
+  min-width: 100px;
+  padding: 2px 10px;
+  height: 40px;
+  background-color: lightgreen;
+  border: 2px solid darkolivegreen;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(100%);
+`;
+
+export const StatusErrorInfo = styled(StatusInfo)`
+  border: 2px solid darkred;
+  background-color: pink;
 `;
 

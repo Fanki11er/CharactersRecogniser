@@ -1,14 +1,12 @@
 import { BrainWrapper, Menu } from './Brain.styles';
-import { NeuralNetwork, NeuralNetworkGPU } from 'brain.js';
-import { data } from '../../../Data/Data';
+import { NeuralNetworkGPU } from 'brain.js';
 import { DefaultButton } from '../../Atoms/Buttons/Buttons';
 import { child, get, ref } from 'firebase/database';
 import { database } from '../../../Firebase/firebase';
-import { NormalizedCharacter, Point } from '../../../Interfaces/interfaces';
+import { NormalizedCharacter } from '../../../Interfaces/interfaces';
 import { useContext, useState } from 'react';
 
 import { CanvasContext } from '../../../Providers/NormalizedDataProvider';
-import MyCanvas from '../../Molecules/MyCanvas/MyCanvas';
 
 const Brain = () => {
   const { normalizedCharacter } = useContext(CanvasContext);
