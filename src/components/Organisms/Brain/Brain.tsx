@@ -22,10 +22,9 @@ import { INeuralNetworkState } from 'brain.js/dist/src/neural-network-types';
 import { INeuralNetworkJSON } from 'brain.js/dist/src/neural-network';
 
 const Brain = () => {
-  // const { normalizedCharacter } = useContext(CanvasContext);
+  const { normalizedCharacter, wantSolution, checkWhatNumberItIs } = useContext(CanvasContext);
   const [trainingCharacters, setTrainingCharacters] = useState<NormalizedCharacter[]>([]);
   const [trainedModel, setTrainedModel] = useState<INeuralNetworkJSON | undefined>(undefined);
-  //const [loadedLearntModel, setLoadedLearntModel] = useState<INeuralNetworkJSON | undefined>(undefined);
   const [testingCharacters, setTestingCharacters] = useState<NormalizedCharacter[]>([]);
   const [accuracy, setAccuracy] = useState(0);
   const { changeStatusInfo } = useContext(StatusInfoContext);
@@ -63,6 +62,11 @@ const Brain = () => {
     !trainedModel && isTesting && getTrainedModel();
     trainedModel && isTesting && testingCharacters.length > 0 && testBrain(net);
   }, [testingCharacters, isTesting, trainedModel]); // eslint-disable-line
+
+  useEffect(() => {
+    wantSolution && !trainedModel && getTrainedModel();
+    wantSolution && trainedModel && normalizedCharacter && findSolution(net);
+  }, [wantSolution, trainedModel, normalizedCharacter]); // eslint-disable-line
 
   const getTrainingData = () => {
     const dbReference = ref(database, rootEndpoint);
@@ -107,7 +111,6 @@ const Brain = () => {
     get(child(dbReference, getTrainedModelEndpoint))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          // setTestingCharacters(snapshot.val());
           setTrainedModel(JSON.parse(snapshot.val()));
 
           changeStatusInfo('INFO', 'Trained model loaded');
@@ -183,11 +186,6 @@ const Brain = () => {
         setIsTraining(false);
       });
   };
-  /*const checkBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
-    learntModel && net.fromJSON(learntModel);
-    const result = net.run(normalizedCharacter?.content);
-    console.log(result);
-  };*/
 
   const testBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
     changeStatusInfo('INFO', 'Tests started');
@@ -213,6 +211,17 @@ const Brain = () => {
       setIsTesting(false);
       setProcessedValue(all);
       setAccuracy((goodSolutions / all) * 100);
+      return;
+    }
+    return;
+  };
+
+  const findSolution = (net: NeuralNetworkGPU<unknown, unknown>) => {
+    changeStatusInfo('INFO', 'Solving... ');
+    if (trainedModel && normalizedCharacter) {
+      net.fromJSON(trainedModel);
+      const result = net.run(normalizedCharacter.content);
+      checkWhatNumberItIs(result);
       return;
     }
     return;
@@ -284,14 +293,6 @@ export default Brain;
 
 trainingTes();*/
 //;
-
-/*
-const crossValidate = new brain.CrossValidate(() => new brain.NeuralNetwork(networkOptions));
-crossValidate.train(data, trainingOptions, k); //note k (or KFolds) is optional
-const json = crossValidate.toJSON(); // all stats in json as well as neural networks
-const net = crossValidate.toNeuralNetwork(); // get top performing net out of `crossValidate`
-
-*/
 
 /*<Menu>
         <DefaultButton>Load learnt model</DefaultButton>
