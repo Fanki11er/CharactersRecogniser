@@ -3,8 +3,9 @@ import { ReactSketchCanvas } from 'react-sketch-canvas';
 
 export const MyCanvasWrapper = styled.div`
   width: 100%;
-  max-width: 1vw;
+  max-width: 1vh;
   height: 100%;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 900px 1fr;
   grid-template-rows: 400px 300px;
@@ -61,11 +62,23 @@ export const StatusInfo = styled.div`
   border-radius: 10px;
   position: absolute;
   bottom: 25px;
-  left: 25px;
+  left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateX(100%);
+  transform: translateX(-100%);
+  animation-name: show;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+
+  @keyframes show {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 `;
 
 export const StatusErrorInfo = styled(StatusInfo)`

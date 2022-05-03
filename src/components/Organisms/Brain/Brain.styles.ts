@@ -2,13 +2,14 @@ import styled from 'styled-components';
 
 export const BrainWrapper = styled.div`
   width: 1000px;
-  height: 100%;
+  height: fit-content;
   border: 3px solid black;
   grid-column: 1 / span 2;
   grid-row: 2 / span 1;
   border-radius: 15px;
   display: grid;
-  grid-template-rows: 50px 110px 1fr;
+  grid-row-gap: 5px;
+  grid-template-rows: 50px 110px 110px;
   grid-template-columns: 100%;
   padding: 15px;
 `;
@@ -93,5 +94,21 @@ export const ProgressInfo = styled.span`
   justify-content: center;
   border: 2px solid black;
   border-radius: 10px;
+`;
+
+export const TestSection = styled(LearnSection)`
+  grid-row: 2 / span 1;
+  grid-template-rows: 30px 30px;
+  margin-top: 15px;
+`;
+
+export const TestSectionMenu = styled.div`
+  width: 100%;
+  height: 40px;
+  grid-row: 2 / span 1;
+  grid-column: 3 / span 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
 `;
 

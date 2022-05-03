@@ -1,4 +1,14 @@
-import { BrainWrapper, LearningProgress, LearnSection, LearnSectionMenu, LoadedCharacters, ProgressInfo, SectionHeader, Title } from './Brain.styles';
+import {
+  BrainWrapper,
+  LearningProgress,
+  LearnSection,
+  LearnSectionMenu,
+  LoadedCharacters,
+  ProgressInfo,
+  SectionHeader,
+  TestSectionMenu,
+  Title,
+} from './Brain.styles';
 import { NeuralNetworkGPU, likely } from 'brain.js';
 import { DefaultButton, DisabledButton } from '../../Atoms/Buttons/Buttons';
 import { child, get, ref, set } from 'firebase/database';
@@ -25,6 +35,7 @@ const Brain = () => {
   const [isTesting, setIsTesting] = useState(false);
   const [iteration, setIteration] = useState(0);
   const [error, setError] = useState(0);
+  const [processedValue, setProcessedValue] = useState(0);
 
   const { rootEndpoint, getLearnEndpoint, modelsEndpoint, testEndpoint, getTrainedModelEndpoint } = firebaseEndPoints;
   const net = new NeuralNetworkGPU({ hiddenLayers: [70, 70, 70] });
@@ -179,7 +190,10 @@ const Brain = () => {
   };*/
 
   const testBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
+    changeStatusInfo('INFO', 'Tests started');
     setIsTesting(true);
+    setProcessedValue(0);
+    setAccuracy(0);
     if (trainedModel && testingCharacters.length > 0) {
       net.fromJSON(trainedModel);
       let goodSolutions = 0;
@@ -188,6 +202,8 @@ const Brain = () => {
         const values = Object.values(testingCharacters[i]) as NormalizedCharacter[];
         all += values.length;
         for (let j = 0; j < values.length; j++) {
+          setProcessedValue(processedValue + 1);
+
           const result = likely(values[j].content, net) as any;
           if (result === values[j].type) {
             goodSolutions += 1;
@@ -195,6 +211,7 @@ const Brain = () => {
         }
       }
       setIsTesting(false);
+      setProcessedValue(all);
       setAccuracy((goodSolutions / all) * 100);
       return;
     }
@@ -220,12 +237,24 @@ const Brain = () => {
           )}
         </LearnSectionMenu>
       </LearnSection>
-      <DefaultButton onClick={() => testBrain(net)}>Test</DefaultButton>
+      <LearnSection>
+        <SectionHeader>Test Section</SectionHeader>
+        <LoadedCharacters>{`Testing characters: ${numberOfTestingCharacters}`}</LoadedCharacters>
+        <LearningProgress>
+          <ProgressInfo>{`Processed: ${processedValue} / ${numberOfTestingCharacters}`}</ProgressInfo>
+          <ProgressInfo>{`Accuracy: ${accuracy > 0 ? `${accuracy}%` : '------'}`}</ProgressInfo>
+        </LearningProgress>
+        <TestSectionMenu>
+          <DefaultButton onClick={() => testBrain(net)}>Test with test data</DefaultButton>
+        </TestSectionMenu>
+      </LearnSection>
     </BrainWrapper>
   );
 };
 
 export default Brain;
+
+//<DefaultButton>Test with yours character</DefaultButton>
 
 /*const trainingTes = ()=> {
   const testNet = new NeuralNetworkGPU({hiddenLayers: [10,10]});
