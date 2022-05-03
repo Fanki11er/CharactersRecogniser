@@ -7,3 +7,8 @@ export const DefaultButton = styled.button`
   border-radius: 15px;
 `;
 
+export const DisabledButton = styled(DefaultButton)`
+  background-color: gray;
+  pointer-events: none;
+`;
+

@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { Canvas, CanvasButtonsWrapper, CanvasSection, MyCanvasWrapper, StatusErrorInfo, StatusInfo } from './MyCanvas.styles';
-import { NormalizedCharacter, Status, StatusInfoInterface } from '../../../Interfaces/interfaces';
+import { NormalizedCharacter } from '../../../Interfaces/interfaces';
 import { DefaultButton } from '../../Atoms/Buttons/Buttons';
 import Visualization from '../Visualizer/Visualizer';
 import NumberSelectionMenu from '../NumberSelectMenu/NumberSelectMenu';
@@ -10,16 +10,14 @@ import Brain from '../../Organisms/Brain/Brain';
 import { CanvasContext } from '../../../Providers/NormalizedDataProvider';
 import { ReactSketchCanvasRef, CanvasPath } from 'react-sketch-canvas';
 import { firebaseEndPoints } from '../../../Firebase/Endpoints';
+import { StatusInfoContext } from '../../../Providers/StatusInfoProvider';
 
 const MyCanvas = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [character, setCharacter] = useState<NormalizedCharacter | undefined>(undefined);
   const [selectValue, setSelectValue] = useState('0');
   const { setCharacter: setTestCharacter } = useContext(CanvasContext);
-  const [statusInfo, setStatusInfo] = useState<StatusInfoInterface>({
-    status: '',
-    message: '',
-  });
+  const { statusInfo, changeStatusInfo } = useContext(StatusInfoContext);
 
   const canvasStyles = {
     border: '4px solid orange',
@@ -27,21 +25,6 @@ const MyCanvas = () => {
   };
 
   const { learnEndpoint, testEndpoint } = firebaseEndPoints;
-  const changeStatusInfo = (status: Status, message: string) => {
-    setStatusInfo({
-      status,
-      message,
-    });
-    setTimeout(() => {
-      resetStatusInfo();
-    }, 3000);
-  };
-  const resetStatusInfo = () => {
-    setStatusInfo({
-      status: '',
-      message: '',
-    });
-  };
 
   const selectType = (type: string) => {
     setSelectValue(type);

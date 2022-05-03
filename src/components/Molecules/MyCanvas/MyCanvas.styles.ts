@@ -6,7 +6,7 @@ export const MyCanvasWrapper = styled.div`
   max-width: 1vw;
   height: 100%;
   display: grid;
-  grid-template-columns: 500px 1fr;
+  grid-template-columns: 900px 1fr;
   grid-template-rows: 400px 300px;
   margin: 25px;
 `;
@@ -61,7 +61,7 @@ export const StatusInfo = styled.div`
   border-radius: 10px;
   position: absolute;
   bottom: 25px;
-  right: 25px;
+  left: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
