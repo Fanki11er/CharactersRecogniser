@@ -14,7 +14,6 @@ export const SolutionSectionWrapper = styled.section`
 
 export const ActionWrapper = styled.div`
   display: grid;
-  //justify-content: space-between;
   width: 150px;
   height: 100%;
   justify-content: center;

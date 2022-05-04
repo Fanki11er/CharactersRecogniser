@@ -8,6 +8,7 @@ import {
   SectionHeader,
   TestSectionMenu,
   Title,
+  WorkingStatus,
 } from './Brain.styles';
 import { NeuralNetworkGPU, likely } from 'brain.js';
 import { DefaultButton, DisabledButton } from '../../Atoms/Buttons/Buttons';
@@ -165,8 +166,6 @@ const Brain = () => {
       }
     }
 
-    console.log('TRAINING');
-
     net
       .trainAsync(trainingData, {
         log: (stats: INeuralNetworkState) => changeLearningStatus(stats.error, stats.iterations),
@@ -231,7 +230,9 @@ const Brain = () => {
     <BrainWrapper>
       <Title>NeuralNetwork</Title>
       <LearnSection>
+        <WorkingStatus isWorking={isTraining} />
         <SectionHeader>Train Section</SectionHeader>
+
         <LoadedCharacters>{`Training characters: ${numberOfTrainingCharacters}`}</LoadedCharacters>
         <LearningProgress>
           <ProgressInfo>{`Error: ${error > 0 ? error.toFixed(8) : '------'}`}</ProgressInfo>
@@ -247,7 +248,9 @@ const Brain = () => {
         </LearnSectionMenu>
       </LearnSection>
       <LearnSection>
+        <WorkingStatus isWorking={isTesting} />
         <SectionHeader>Test Section</SectionHeader>
+
         <LoadedCharacters>{`Testing characters: ${numberOfTestingCharacters}`}</LoadedCharacters>
         <LearningProgress>
           <ProgressInfo>{`Processed: ${processedValue} / ${numberOfTestingCharacters}`}</ProgressInfo>
@@ -262,44 +265,4 @@ const Brain = () => {
 };
 
 export default Brain;
-
-//<DefaultButton>Test with yours character</DefaultButton>
-
-/*const trainingTes = ()=> {
-  const testNet = new NeuralNetworkGPU({hiddenLayers: [10,10]});
-  const trainingData= [
-    {input: [1,1,0,0,0,0,0,0,0,0], output: {[1]: 1}},
-    {input: [0,1,1,0,0,0,0,0,0,0], output: {[1]: 1}},
-    {input: [0,0,0,1,1,0,0,0,0,0], output: {[2]: 1}},
-    {input: [0,0,0,0,1,1,0,0,0,0,], output: {[2]: 1}},
-    {input: [0,0,0,0,0,0,0,0,0,1,1], output: {[3]: 1}},
-    {input: [0,0,0,0,0,0,0,1,1,0,], output: {[3]: 1}},
-  ]
-  
-  const stats = testNet.train(trainingData, {
-    log: true,
-    logPeriod: 500,
-    errorThresh: 0.0001,
-    learningRate: 0.3,
-    iterations: 10000,
-    momentum: 0.1,
-  });
-  console.log(stats);
-  
-  const result  = testNet.run([1,1,0,0,0,0,0,0,0,0]);
-      console.log(result);
-
-}
-
-trainingTes();*/
-//;
-
-/*<Menu>
-        <DefaultButton>Load learnt model</DefaultButton>
-        <DefaultButton onClick={() => runBrain(net)}>Learn Brain</DefaultButton>
-        <DefaultButton onClick={() => getLearningData()}>Load training data</DefaultButton>
-        <DefaultButton onClick={() => checkBrain(net)}>TestMe</DefaultButton>
-        
-        <DefaultButton>Test session</DefaultButton>
-      </Menu> */
 

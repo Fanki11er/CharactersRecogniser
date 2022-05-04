@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface StyledProps {
+  isWorking: boolean;
+}
+
 export const BrainWrapper = styled.div`
   width: 1000px;
   height: fit-content;
@@ -42,7 +46,22 @@ export const LearnSection = styled.section`
   grid-template-rows: 50px 1fr;
   border: 2px solid black;
   border-radius: 10px;
-  padding: 0 15px;
+  padding: 0 20px;
+  position: relative;
+`;
+
+export const WorkingStatus = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: ${(props: StyledProps) => (props.isWorking ? 'green' : 'gray')};
+  transition: all 0.5s;
+  align-self: center;
+  justify-self: flex-start;
+  margin: 0 10px;
+  position: absolute;
+  left: -8px;
+  top: 2px;
 `;
 
 export const LoadedCharacters = styled.span`

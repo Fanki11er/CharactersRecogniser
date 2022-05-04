@@ -62,7 +62,7 @@ export const StatusInfo = styled.div`
   border-radius: 10px;
   position: absolute;
   bottom: 25px;
-  left: 10px;
+  left: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,6 +70,7 @@ export const StatusInfo = styled.div`
   animation-name: show;
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
+  transform-origin: 0% 0%;
 
   @keyframes show {
     from {

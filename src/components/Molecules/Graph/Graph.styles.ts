@@ -28,7 +28,6 @@ export const GraphColumn = styled.div`
   background-color: ${(props: GraphProps) => (props.solution ? 'green' : 'orange')};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  //transform: scaleY(1);
   animation-name: solve;
   animation-duration: 6s;
   animation-delay: 8s;

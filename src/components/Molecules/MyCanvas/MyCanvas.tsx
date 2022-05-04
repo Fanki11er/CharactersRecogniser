@@ -16,7 +16,7 @@ import SolutionSection from '../SolutionSection/SolutionSection';
 const MyCanvas = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [character, setCharacter] = useState<NormalizedCharacter | undefined>(undefined);
-  const [selectValue, setSelectValue] = useState('0');
+  const [selectValue, setSelectValue] = useState('X');
   const { setCharacter: setTestCharacter } = useContext(CanvasContext);
   const { statusInfo, changeStatusInfo } = useContext(StatusInfoContext);
 
@@ -63,11 +63,16 @@ const MyCanvas = () => {
     const newCharacter = newNormalization(data!, selectValue);
     setCharacter(newCharacter);
     setTestCharacter(newCharacter);
+    setSelectValue('X');
   };
 
   const sendCharacter = async (character: NormalizedCharacter, endpoint: string) => {
     if (character.content.length !== 160) {
       changeStatusInfo('ERROR', `${character.content.length} - wrong size of character`);
+      return;
+    }
+    if (character.type === 'X') {
+      changeStatusInfo('ERROR', 'Character type must be a digit from 0 to 9');
       return;
     }
     const dbReference = ref(database, endpoint);
@@ -98,7 +103,7 @@ const MyCanvas = () => {
           <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
         </CanvasButtonsWrapper>
         <Visualization pixels={character ? character.content : []} />
-        <NumberSelectionMenu select={selectType} />
+        <NumberSelectionMenu select={selectType} defaultValue={selectValue} />
       </CanvasSection>
 
       <Brain />
