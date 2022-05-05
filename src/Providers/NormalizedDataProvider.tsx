@@ -2,16 +2,16 @@ import { createContext, PropsWithChildren, useState } from 'react';
 import { NormalizedCharacter } from '../Interfaces/interfaces';
 
 interface Context {
-  normalizedCharacter: NormalizedCharacter | null;
+  normalizedCharacter: NormalizedCharacter | undefined;
   solution: number[];
   wantSolution: boolean;
-  setCharacter: (character: NormalizedCharacter) => void;
+  setCharacter: (character: NormalizedCharacter | undefined) => void;
   checkWhatNumberItIs: (object: any) => void;
   getSolution: () => void;
 }
 
 export const CanvasContext = createContext<Context>({
-  normalizedCharacter: null,
+  normalizedCharacter: undefined,
   solution: [],
   wantSolution: false,
   setCharacter: () => {},
@@ -20,11 +20,11 @@ export const CanvasContext = createContext<Context>({
 });
 
 const NormalizedDataProvider = (props: PropsWithChildren<any>) => {
-  const [normalizedCharacter, setNormalizedCharacter] = useState<NormalizedCharacter | null>(null);
+  const [normalizedCharacter, setNormalizedCharacter] = useState<NormalizedCharacter | undefined>(undefined);
   const [solution, setSolution] = useState<number[]>([]);
   const [wantSolution, setWantSolution] = useState(false);
 
-  const setCharacter = (character: NormalizedCharacter) => {
+  const setCharacter = (character: NormalizedCharacter | undefined) => {
     setNormalizedCharacter(character);
   };
 

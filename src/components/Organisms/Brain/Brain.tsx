@@ -38,7 +38,7 @@ const Brain = () => {
   const [processedValue, setProcessedValue] = useState(0);
 
   const { rootEndpoint, getLearnEndpoint, modelsEndpoint, testEndpoint, getTrainedModelEndpoint } = firebaseEndPoints;
-  const net = new NeuralNetworkGPU({ hiddenLayers: [50, 50, 50] });
+  const net = new NeuralNetworkGPU({ hiddenLayers: [200, 200, 200] });
   const iterations = 20000;
 
   useEffect(() => {
@@ -240,6 +240,7 @@ const Brain = () => {
         </LearningProgress>
         <LearnSectionMenu>
           <DefaultButton onClick={() => teachBrain()}>Train Network</DefaultButton>
+          <DefaultButton onClick={() => getTrainingData()}>Reload data</DefaultButton>
           {trainedModel ? (
             <DefaultButton onClick={() => sendModel(trainedModel, rootEndpoint, modelsEndpoint)}>Save model</DefaultButton>
           ) : (
@@ -254,10 +255,11 @@ const Brain = () => {
         <LoadedCharacters>{`Testing characters: ${numberOfTestingCharacters}`}</LoadedCharacters>
         <LearningProgress>
           <ProgressInfo>{`Processed: ${processedValue} / ${numberOfTestingCharacters}`}</ProgressInfo>
-          <ProgressInfo>{`Accuracy: ${accuracy > 0 ? `${accuracy}%` : '------'}`}</ProgressInfo>
+          <ProgressInfo>{`Accuracy: ${accuracy > 0 ? `${accuracy.toFixed(2)}%` : '------'}`}</ProgressInfo>
         </LearningProgress>
         <TestSectionMenu>
           <DefaultButton onClick={() => testBrain(net)}>Test with test data</DefaultButton>
+          <DefaultButton onClick={() => getTestingData()}>Reload data</DefaultButton>
         </TestSectionMenu>
       </LearnSection>
     </BrainWrapper>

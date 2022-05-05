@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ThemeProps } from '../../../Theme/theme';
 
 export const VisualizerWrapper = styled.div`
   display: grid;
@@ -14,6 +15,8 @@ export const VisualizerWrapper = styled.div`
   justify-content: center;
   align-self: center;
   justify-self: center;
+  background-color: ${(props: ThemeProps)=> props.theme.colors.numberScreenLightBlue};
+  border: 3px solid ${(props: ThemeProps)=> props.theme.colors.numberScreenBorderOrange};
 `;
 
 export const EmptyPixel = styled.div`

@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from 'react';
 import { Canvas, CanvasButtonsWrapper, CanvasSection, MyCanvasWrapper, StatusErrorInfo, StatusInfo } from './MyCanvas.styles';
 import { NormalizedCharacter } from '../../../Interfaces/interfaces';
-import { DefaultButton } from '../../Atoms/Buttons/Buttons';
+import { DefaultButton, DisabledButton } from '../../Atoms/Buttons/Buttons';
 import Visualization from '../Visualizer/Visualizer';
 import NumberSelectionMenu from '../NumberSelectMenu/NumberSelectMenu';
 import { child, push, ref } from 'firebase/database';
@@ -63,7 +63,6 @@ const MyCanvas = () => {
     const newCharacter = newNormalization(data!, selectValue);
     setCharacter(newCharacter);
     setTestCharacter(newCharacter);
-    setSelectValue('X');
   };
 
   const sendCharacter = async (character: NormalizedCharacter, endpoint: string) => {
@@ -80,6 +79,7 @@ const MyCanvas = () => {
     push(child(dbReference, `/${character.type}`), character)
       .then(() => {
         changeStatusInfo('INFO', 'Sent');
+        clearCanvas();
       })
       .catch((err) => {
         changeStatusInfo('ERROR', err.message);
@@ -89,6 +89,9 @@ const MyCanvas = () => {
   const clearCanvas = () => {
     if (canvasRef) {
       canvasRef.current?.resetCanvas();
+      setCharacter(undefined);
+      setTestCharacter(undefined);
+      setSelectValue('X');
     }
   };
 
@@ -99,8 +102,16 @@ const MyCanvas = () => {
         <CanvasButtonsWrapper>
           <DefaultButton onClick={() => getNewData()}>Get data</DefaultButton>
           <DefaultButton onClick={() => clearCanvas()}>Reset</DefaultButton>
-          <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
-          <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
+          {character ? (
+            <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
+          ) : (
+            <DisabledButton>Send Training element</DisabledButton>
+          )}
+          {character ? (
+            <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
+          ) : (
+            <DisabledButton>Send as Test element</DisabledButton>
+          )}
         </CanvasButtonsWrapper>
         <Visualization pixels={character ? character.content : []} />
         <NumberSelectionMenu select={selectType} defaultValue={selectValue} />

@@ -12,7 +12,7 @@ const SolutionSection = () => {
         <Graph numbers={solution} />
       </GraphSection>
       <ActionWrapper>
-        {normalizedCharacter ? <Info>Test Me</Info> : <Info>Wymagany znak</Info>}
+        {normalizedCharacter ? <Info>Test Me</Info> : <Info>Character required</Info>}
         {normalizedCharacter ? (
           <DefaultButton onClick={() => getSolution()}>Get solution</DefaultButton>
         ) : (

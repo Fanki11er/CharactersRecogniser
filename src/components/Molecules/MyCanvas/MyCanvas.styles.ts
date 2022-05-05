@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ReactSketchCanvas } from 'react-sketch-canvas';
+import { ThemeProps } from '../../../Theme/theme';
 
 export const MyCanvasWrapper = styled.div`
   width: 100%;
@@ -24,9 +25,10 @@ export const CanvasSection = styled.section`
   grid-template-rows: 160px 1fr;
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
+  border: 3px solid ${(props: ThemeProps)=>props.theme.colors.frameBlue};
   border-radius: 15px;
   position: relative;
+  background-image: linear-gradient(190deg, rgba(193, 235, 255, 1), rgba(193, 235, 255, 0));
 `;
 
 export const CanvasButtonsWrapper = styled.div`
@@ -38,7 +40,7 @@ export const CanvasButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around; ;
+  justify-content: space-around; 
 `;
 
 export const Canvas = styled(ReactSketchCanvas)`
@@ -85,5 +87,8 @@ export const StatusInfo = styled.div`
 export const StatusErrorInfo = styled(StatusInfo)`
   border: 2px solid darkred;
   background-color: pink;
+  //color: white;
+  //background-image: linear-gradient(200deg, rgba(173, 173, 173, 1), rgba(237, 237 ,237, 1));
+
 `;
 
