@@ -102,13 +102,13 @@ const MyCanvas = () => {
         <CanvasButtonsWrapper>
           <DefaultButton onClick={() => getNewData()}>Get data</DefaultButton>
           <DefaultButton onClick={() => clearCanvas()}>Reset</DefaultButton>
-          {character ? (
+          {character  && selectValue !== "X" ? (
             <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
           ) : (
             <DisabledButton>Send Training element</DisabledButton>
           )}
-          {character ? (
-            <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
+          {character && selectValue !== "X"? (
+            <DefaultButton onClick={() => character  && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
           ) : (
             <DisabledButton>Send as Test element</DisabledButton>
           )}
