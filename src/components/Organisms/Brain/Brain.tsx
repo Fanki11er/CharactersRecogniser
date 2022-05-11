@@ -170,8 +170,8 @@ const Brain = () => {
       .trainAsync(trainingData, {
         log: (stats: INeuralNetworkState) => changeLearningStatus(stats.error, stats.iterations),
         logPeriod: 100,
-        errorThresh: 0.000005,
-        learningRate: 0.2,
+        errorThresh: 0.0000005,
+        learningRate: 0.1,
         iterations: iterations,
         momentum: 0.1,
       })
