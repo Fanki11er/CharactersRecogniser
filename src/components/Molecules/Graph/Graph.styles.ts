@@ -1,9 +1,16 @@
 import styled from 'styled-components';
+import { ThemeProps } from '../../../Theme/theme';
 
 interface GraphProps {
-  heightOf: string;
+  heightOf: {
+  color: string;
+  height: string;
+  }
+
   solution?: boolean;
 }
+
+
 
 export const GraphWrapper = styled.div`
   position: relative;
@@ -19,16 +26,15 @@ export const GraphWrapper = styled.div`
 
 export const GraphColumn = styled.div`
   width: 100%;
-  height: calc(${(props: GraphProps) => props.heightOf} - 15px);
-  border: 1px solid ${(props: GraphProps) => (props.solution ? 'green' : 'orange')};
+height: calc(${(props: GraphProps) => props.heightOf.height} - 15px);
   transform-origin: 50% 100%;
   display: flex;
   align-self: flex-end;
   grid-row: 1 / span 1;
-  background-color: ${(props: GraphProps) => (props.solution ? 'green' : 'orange')};
+  border-top-left-radius: 10px; ; 
+  background-color:${(props: GraphProps & ThemeProps) => (props.solution ? props.heightOf.color : props.theme.colors.buttonInactiveGrayStart)};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  //transform: scaleY(1);
   animation-name: solve;
   animation-duration: 6s;
   animation-delay: 8s;
@@ -54,6 +60,7 @@ export const Scale = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  background-color: ${(props: ThemeProps)=> props.theme.colors.barsNumberOrange} ;
 `;
 
 export const Bottom = styled.div`
@@ -63,5 +70,6 @@ export const Bottom = styled.div`
   position: absolute;
   left: 0;
   bottom: 40px;
+  background-color: ${(props: ThemeProps)=> props.theme.colors.frameBlue}
 `;
 

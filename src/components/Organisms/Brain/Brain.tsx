@@ -8,6 +8,7 @@ import {
   SectionHeader,
   TestSectionMenu,
   Title,
+  WorkingStatus,
 } from './Brain.styles';
 import { NeuralNetworkGPU, likely } from 'brain.js';
 import { DefaultButton, DisabledButton } from '../../Atoms/Buttons/Buttons';
@@ -37,9 +38,8 @@ const Brain = () => {
   const [processedValue, setProcessedValue] = useState(0);
 
   const { rootEndpoint, getLearnEndpoint, modelsEndpoint, testEndpoint, getTrainedModelEndpoint } = firebaseEndPoints;
-  const net = new NeuralNetworkGPU({ hiddenLayers: [50, 50, 50] });
-  const iterations = 20000;
-
+  const net = new NeuralNetworkGPU({ hiddenLayers: [160, 160] });
+  const iterations = 10000;
   useEffect(() => {
     countCharacters(trainingCharacters);
   }, [trainingCharacters]);
@@ -154,6 +154,7 @@ const Brain = () => {
 
   const runBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
     const trainingData = [];
+    changeLearningStatus(0, 0);
 
     for (let i = 0; i < trainingCharacters.length; i++) {
       const values = Object.values(trainingCharacters[i]) as NormalizedCharacter[];
@@ -165,13 +166,11 @@ const Brain = () => {
       }
     }
 
-    console.log('TRAINING');
-
     net
       .trainAsync(trainingData, {
         log: (stats: INeuralNetworkState) => changeLearningStatus(stats.error, stats.iterations),
-        logPeriod: 500,
-        errorThresh: 0.000002,
+        logPeriod: 100,
+        errorThresh: 0.0000005,
         learningRate: 0.1,
         iterations: iterations,
         momentum: 0.1,
@@ -217,8 +216,14 @@ const Brain = () => {
   };
 
   const findSolution = (net: NeuralNetworkGPU<unknown, unknown>) => {
-    changeStatusInfo('INFO', 'Solving... ');
+    
+   
     if (trainedModel && normalizedCharacter) {
+      if(normalizedCharacter.content.length !== 160){
+        changeStatusInfo('ERROR', ` ${normalizedCharacter.content.length} is incorrect  character length`);
+        return
+      }
+      changeStatusInfo('INFO', 'Solving... ');
       net.fromJSON(trainedModel);
       const result = net.run(normalizedCharacter.content);
       checkWhatNumberItIs(result);
@@ -231,14 +236,25 @@ const Brain = () => {
     <BrainWrapper>
       <Title>NeuralNetwork</Title>
       <LearnSection>
+        <WorkingStatus isWorking={isTraining} />
         <SectionHeader>Train Section</SectionHeader>
+
         <LoadedCharacters>{`Training characters: ${numberOfTrainingCharacters}`}</LoadedCharacters>
         <LearningProgress>
           <ProgressInfo>{`Error: ${error > 0 ? error.toFixed(8) : '------'}`}</ProgressInfo>
           <ProgressInfo>{`Iteration: ${iteration > 0 ? iteration : '------'} / ${iterations}`}</ProgressInfo>
         </LearningProgress>
         <LearnSectionMenu>
-          <DefaultButton onClick={() => teachBrain()}>Train Network</DefaultButton>
+          {isTraining || isTesting ? (
+            <DisabledButton>Train Network</DisabledButton>
+          ) : (
+            <DefaultButton onClick={() => teachBrain()}>Train Network</DefaultButton>
+          )}
+          {isTraining || isTesting ? (
+            <DisabledButton>Reload data</DisabledButton>
+          ) : (
+            <DefaultButton onClick={() => getTrainingData()}>Reload data</DefaultButton>
+          )}
           {trainedModel ? (
             <DefaultButton onClick={() => sendModel(trainedModel, rootEndpoint, modelsEndpoint)}>Save model</DefaultButton>
           ) : (
@@ -247,14 +263,25 @@ const Brain = () => {
         </LearnSectionMenu>
       </LearnSection>
       <LearnSection>
+        <WorkingStatus isWorking={isTesting} />
         <SectionHeader>Test Section</SectionHeader>
+
         <LoadedCharacters>{`Testing characters: ${numberOfTestingCharacters}`}</LoadedCharacters>
         <LearningProgress>
           <ProgressInfo>{`Processed: ${processedValue} / ${numberOfTestingCharacters}`}</ProgressInfo>
-          <ProgressInfo>{`Accuracy: ${accuracy > 0 ? `${accuracy}%` : '------'}`}</ProgressInfo>
+          <ProgressInfo>{`Accuracy: ${accuracy > 0 ? `${accuracy.toFixed(2)}%` : '------'}`}</ProgressInfo>
         </LearningProgress>
         <TestSectionMenu>
-          <DefaultButton onClick={() => testBrain(net)}>Test with test data</DefaultButton>
+          {isTraining || isTesting ? (
+            <DisabledButton>Test with test data</DisabledButton>
+          ) : (
+            <DefaultButton onClick={() => testBrain(net)}>Test with test data</DefaultButton>
+          )}
+          {isTraining || isTesting ? (
+            <DisabledButton>Reload data</DisabledButton>
+          ) : (
+            <DefaultButton onClick={() => getTestingData()}>Reload data</DefaultButton>
+          )}
         </TestSectionMenu>
       </LearnSection>
     </BrainWrapper>
@@ -262,44 +289,4 @@ const Brain = () => {
 };
 
 export default Brain;
-
-//<DefaultButton>Test with yours character</DefaultButton>
-
-/*const trainingTes = ()=> {
-  const testNet = new NeuralNetworkGPU({hiddenLayers: [10,10]});
-  const trainingData= [
-    {input: [1,1,0,0,0,0,0,0,0,0], output: {[1]: 1}},
-    {input: [0,1,1,0,0,0,0,0,0,0], output: {[1]: 1}},
-    {input: [0,0,0,1,1,0,0,0,0,0], output: {[2]: 1}},
-    {input: [0,0,0,0,1,1,0,0,0,0,], output: {[2]: 1}},
-    {input: [0,0,0,0,0,0,0,0,0,1,1], output: {[3]: 1}},
-    {input: [0,0,0,0,0,0,0,1,1,0,], output: {[3]: 1}},
-  ]
-  
-  const stats = testNet.train(trainingData, {
-    log: true,
-    logPeriod: 500,
-    errorThresh: 0.0001,
-    learningRate: 0.3,
-    iterations: 10000,
-    momentum: 0.1,
-  });
-  console.log(stats);
-  
-  const result  = testNet.run([1,1,0,0,0,0,0,0,0,0]);
-      console.log(result);
-
-}
-
-trainingTes();*/
-//;
-
-/*<Menu>
-        <DefaultButton>Load learnt model</DefaultButton>
-        <DefaultButton onClick={() => runBrain(net)}>Learn Brain</DefaultButton>
-        <DefaultButton onClick={() => getLearningData()}>Load training data</DefaultButton>
-        <DefaultButton onClick={() => checkBrain(net)}>TestMe</DefaultButton>
-        
-        <DefaultButton>Test session</DefaultButton>
-      </Menu> */
 

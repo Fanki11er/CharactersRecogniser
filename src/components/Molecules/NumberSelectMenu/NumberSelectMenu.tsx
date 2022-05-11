@@ -2,12 +2,14 @@ import { Menu, SelectNumberMenuWrapper, StyledOption } from './NumberSelectMenu.
 
 interface Props {
   select: (selection: string) => void;
+  defaultValue: string;
 }
 const NumberSelectionMenu = (props: Props) => {
-  const { select } = props;
+  const { select, defaultValue } = props;
   return (
     <SelectNumberMenuWrapper>
-      <Menu onChange={(e) => select(e.target.value)} defaultValue={0}>
+      <Menu onChange={(e) => select(e.target.value)} value={defaultValue}>
+        <StyledOption value={'X'}>X</StyledOption>
         <StyledOption value={'0'}>0</StyledOption>
         <StyledOption value={'1'}>1</StyledOption>
         <StyledOption value={'2'}>2</StyledOption>

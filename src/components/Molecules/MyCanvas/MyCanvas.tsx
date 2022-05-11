@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from 'react';
 import { Canvas, CanvasButtonsWrapper, CanvasSection, MyCanvasWrapper, StatusErrorInfo, StatusInfo } from './MyCanvas.styles';
 import { NormalizedCharacter } from '../../../Interfaces/interfaces';
-import { DefaultButton } from '../../Atoms/Buttons/Buttons';
+import { DefaultButton, DisabledButton } from '../../Atoms/Buttons/Buttons';
 import Visualization from '../Visualizer/Visualizer';
 import NumberSelectionMenu from '../NumberSelectMenu/NumberSelectMenu';
 import { child, push, ref } from 'firebase/database';
@@ -16,7 +16,7 @@ import SolutionSection from '../SolutionSection/SolutionSection';
 const MyCanvas = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [character, setCharacter] = useState<NormalizedCharacter | undefined>(undefined);
-  const [selectValue, setSelectValue] = useState('0');
+  const [selectValue, setSelectValue] = useState('X');
   const { setCharacter: setTestCharacter } = useContext(CanvasContext);
   const { statusInfo, changeStatusInfo } = useContext(StatusInfoContext);
 
@@ -70,11 +70,16 @@ const MyCanvas = () => {
       changeStatusInfo('ERROR', `${character.content.length} - wrong size of character`);
       return;
     }
+    if (character.type === 'X') {
+      changeStatusInfo('ERROR', 'Character type must be a digit from 0 to 9');
+      return;
+    }
     const dbReference = ref(database, endpoint);
 
     push(child(dbReference, `/${character.type}`), character)
       .then(() => {
         changeStatusInfo('INFO', 'Sent');
+        clearCanvas();
       })
       .catch((err) => {
         changeStatusInfo('ERROR', err.message);
@@ -84,6 +89,9 @@ const MyCanvas = () => {
   const clearCanvas = () => {
     if (canvasRef) {
       canvasRef.current?.resetCanvas();
+      setCharacter(undefined);
+      setTestCharacter(undefined);
+      setSelectValue('X');
     }
   };
 
@@ -94,11 +102,19 @@ const MyCanvas = () => {
         <CanvasButtonsWrapper>
           <DefaultButton onClick={() => getNewData()}>Get data</DefaultButton>
           <DefaultButton onClick={() => clearCanvas()}>Reset</DefaultButton>
-          <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
-          <DefaultButton onClick={() => character && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
+          {character  && selectValue !== "X" ? (
+            <DefaultButton onClick={() => character && sendCharacter(character, learnEndpoint)}>Send learning element</DefaultButton>
+          ) : (
+            <DisabledButton>Send Training element</DisabledButton>
+          )}
+          {character && selectValue !== "X"? (
+            <DefaultButton onClick={() => character  && sendCharacter(character, testEndpoint)}>Send as Test element</DefaultButton>
+          ) : (
+            <DisabledButton>Send as Test element</DisabledButton>
+          )}
         </CanvasButtonsWrapper>
         <Visualization pixels={character ? character.content : []} />
-        <NumberSelectionMenu select={selectType} />
+        <NumberSelectionMenu select={selectType} defaultValue={selectValue} />
       </CanvasSection>
 
       <Brain />

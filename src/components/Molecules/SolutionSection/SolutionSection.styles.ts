@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { ThemeProps } from '../../../Theme/theme';
+
 
 export const SolutionSectionWrapper = styled.section`
   width: 600px;
@@ -9,13 +11,13 @@ export const SolutionSectionWrapper = styled.section`
   border-radius: 15px;
   grid-row: 1 / span 1;
   grid-column: 2 / span 1;
-  border: 2px solid black;
+  border: 3px solid ${(props: ThemeProps)=>props.theme.colors.frameBlue};
+  background-image: linear-gradient(200deg, rgba(193, 235, 255, 1), rgba(193, 235, 255, 0));
 `;
 
 export const ActionWrapper = styled.div`
   display: grid;
-  //justify-content: space-between;
-  width: 150px;
+  width: 200px;
   height: 100%;
   justify-content: center;
   align-items: center;
@@ -23,11 +25,13 @@ export const ActionWrapper = styled.div`
 `;
 
 export const Info = styled.span`
-  color: orange;
+  color: ${(props: ThemeProps)=>props.theme.colors.fontColorRequiredCharacterRedStart};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px; ;
+  font-size: 20px;
+  font-weight: bold ;
+  width: fit-content;
 `;
 
 export const GraphSection = styled.section`

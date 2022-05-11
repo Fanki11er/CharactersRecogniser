@@ -1,12 +1,17 @@
 import styled from 'styled-components';
+import { ThemeProps } from '../../../Theme/theme';
+
+interface StyledProps {
+  isWorking: boolean;
+}
 
 export const BrainWrapper = styled.div`
   width: 1000px;
   height: fit-content;
-  border: 3px solid black;
+  //border: 3px solid black;
   grid-column: 1 / span 2;
   grid-row: 2 / span 1;
-  border-radius: 15px;
+  //border-radius: 15px;
   display: grid;
   grid-row-gap: 5px;
   grid-template-rows: 50px 110px 110px;
@@ -40,9 +45,25 @@ export const LearnSection = styled.section`
   height: 100%;
   grid-template-columns: 220px 1fr 320px;
   grid-template-rows: 50px 1fr;
-  border: 2px solid black;
+  border: 3px solid ${(props: ThemeProps)=>props.theme.colors.frameBlue};
   border-radius: 10px;
-  padding: 0 15px;
+  padding: 0 20px;
+  position: relative;
+  background-image: linear-gradient(190deg, rgba(193, 235, 255, 1), rgba(193, 235, 255, 0));
+`;
+
+export const WorkingStatus = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: ${(props: StyledProps & ThemeProps) => (props.isWorking ? props.theme.colors.diodeGreen : 'gray')};
+  transition: all 0.5s;
+  align-self: center;
+  justify-self: flex-start;
+  margin: 0 10px;
+  position: absolute;
+  left: -8px;
+  top: 2px;
 `;
 
 export const LoadedCharacters = styled.span`
@@ -52,7 +73,8 @@ export const LoadedCharacters = styled.span`
   align-items: center;
   justify-content: center;
   grid-row: 2 / span 1;
-  border: 2px solid black;
+  //border: 2px solid black;
+  border: 3px solid ${(props: ThemeProps)=>props.theme.colors.frameBlue};
   border-radius: 10px;
   grid-column: 1 / span 1;
 `;
@@ -80,10 +102,15 @@ export const SectionHeader = styled.h4`
 export const LearnSectionMenu = styled.div`
   width: 100%;
   height: 100%;
-  grid-row: 2 / span 1;
-  display: flex;
+  grid-row: 1 / span 1;
+  grid-column: 3 / span 1;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: 0.5fr 0.5fr;
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: center;
+  row-gap: 10px;
+  padding: 10px 0px 12px 10px;
 `;
 
 export const ProgressInfo = styled.span`
@@ -92,7 +119,8 @@ export const ProgressInfo = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
+  //border: 2px solid black;
+  border: 3px solid ${(props: ThemeProps)=>props.theme.colors.frameBlue};
   border-radius: 10px;
 `;
 
