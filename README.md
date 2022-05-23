@@ -1,13 +1,15 @@
-<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/master/src/assets/images/favicon.svg" width="200px" align="center">
+<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/favicon.svg" width="300px" align="center">
 
 <br/>
 <br/>
 
-<h2> CharactersRecogniser </h2>
+<h2 align="center"> CharactersRecogniser </h2>
 <br/>
 <br/>
 
-<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/master/src/assets/images/Example.PNG" width="200px" align="center">
+<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/Example.PNG" width="300px" align="center">
+<br/>
+<br/>
 
 ### Projekt na Pracownię specjalistyczną z przedmiotu Sztyczna Inteligencja
 
