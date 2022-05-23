@@ -1,4 +1,4 @@
-<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/favicon.svg" width="300px" align="center">
+<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/favicon.svg" align="center" width="300px" >
 
 <br/>
 <br/>
@@ -7,11 +7,11 @@
 <br/>
 <br/>
 
-<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/Example.PNG" width="300px" align="center">
+<img src="https://github.com/Fanki11er/CharactersRecogniser/raw/main/src/assets/images/Example.PNG" width="400px" align="center">
 <br/>
 <br/>
 
-### Projekt na Pracownię specjalistyczną z przedmiotu Sztyczna Inteligencja
+### Projekt na Pracownię specjalistyczną z przedmiotu Sztuczna Inteligencja
 
 <br/>
 <br/>
