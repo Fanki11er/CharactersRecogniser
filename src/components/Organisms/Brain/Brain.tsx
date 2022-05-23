@@ -37,6 +37,8 @@ const Brain = () => {
   const [error, setError] = useState(0);
   const [processedValue, setProcessedValue] = useState(0);
 
+  // TODO Network declaration --------------------------------------------------------------------------------
+
   const { rootEndpoint, getLearnEndpoint, modelsEndpoint, testEndpoint, getTrainedModelEndpoint } = firebaseEndPoints;
   const net = new NeuralNetworkGPU({ hiddenLayers: [160, 160] });
   const iterations = 10000;
@@ -152,6 +154,9 @@ const Brain = () => {
     }
   };
 
+  // ! Network training --------------------------------------------------------------------------------
+
+
   const runBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
     const trainingData = [];
     changeLearningStatus(0, 0);
@@ -165,6 +170,7 @@ const Brain = () => {
         });
       }
     }
+// TODO Network configuration --------------------------------------------------------------------------------
 
     net
       .trainAsync(trainingData, {
@@ -185,8 +191,9 @@ const Brain = () => {
         setIsTraining(false);
       });
   };
+// ! Network tests --------------------------------------------------------------------------------
 
-  const testBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
+    const testBrain = (net: NeuralNetworkGPU<unknown, unknown>) => {
     changeStatusInfo('INFO', 'Tests started');
     setIsTesting(true);
     setProcessedValue(0);
