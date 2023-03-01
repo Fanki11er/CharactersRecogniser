@@ -11,7 +11,7 @@
 <br/>
 <br/>
 
-### Projekt na Pracownię specjalistyczną z przedmiotu Sztuczna Inteligencja
+### A project for a specialist laboratory in the subject of Artificial Intelligence
 
 <br/>
 <br/>
@@ -19,17 +19,17 @@
 
 </br>
 
-## Cel
+## Objective
 
-Zbudować aplikację internetową, która pozwoli nauczyć sieć
-neuronową rozpoznawania cyfr wpisywane ręcznie (np. za pomocą
-myszki) przez użytkownika
+Build a web application that will teach the neural network
+recognition of digits entered manually (e.g. with
+mouse) by the user
 
 ## Link
 
-[**Film przedstawiający działanie aplikacji**](https://youtu.be/A2j4G4C_0LI).
+[**A video showing the application in action**](https://youtu.be/A2j4G4C_0LI).
 
-## Niektóre z wykorzystanych technologii
+## Some of the used technologies
 
 - _React_
 - _TypeScript_
